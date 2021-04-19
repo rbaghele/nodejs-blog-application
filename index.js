@@ -68,14 +68,14 @@ const redirectIfAuthenticated = require("./middleware/redirectIfAuthenticated");
 app.use("/posts/store", storePost);
 
 app.get("/", homePageController);
-app.get("/posts/:id", getPostController);
 app.get("/posts/new", auth, createPostController);
+app.get("/posts/:id", getPostController);
 app.post("/posts/store", storePostController);
 app.get("/auth/register", redirectIfAuthenticated, createUserController);
 app.post("/users/register", redirectIfAuthenticated, storeUserController);
 app.get("/auth/login", redirectIfAuthenticated, loginController);
 app.post("/users/login", redirectIfAuthenticated, loginUserController);
-app.get("/auth/logout", redirectIfAuthenticated, logoutController);
+app.get("/auth/logout", logoutController);
 
 // app.get("/", async (req, res) => {
 //   const posts = await Post.find({});
