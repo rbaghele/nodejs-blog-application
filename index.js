@@ -10,15 +10,19 @@ const expressSession = require("express-session");
 const connectMongo = require("connect-mongo");
 const connectFlash = require("connect-flash");
 
-const createPostController = require("./controllers/createPost");
-const homePageController = require("./controllers/homePage");
-const storePostController = require("./controllers/storePost");
-const getPostController = require("./controllers/getPost");
-const createUserController = require("./controllers/createUser");
-const storeUserController = require("./controllers/storeUser");
-const loginController = require("./controllers/login");
-const loginUserController = require("./controllers/loginUser");
-const logoutController = require("./controllers/logout");
+// const createPostController = require("./controllers/createPost");
+// const homePageController = require("./controllers/homePage");
+// const storePostController = require("./controllers/storePost");
+// const getPostController = require("./controllers/getPost");
+// const createUserController = require("./controllers/createUser");
+// const storeUserController = require("./controllers/storeUser");
+// const loginController = require("./controllers/login");
+// const loginUserController = require("./controllers/loginUser");
+// const logoutController = require("./controllers/logout");
+
+const usersController = require("./controllers/usersController");
+const postsController = require("./controllers/postsController");
+const sessionController = require("./controllers/sessionController");
 const auth = require("./middleware/auth");
 
 const app = express();
@@ -67,15 +71,24 @@ const redirectIfAuthenticated = require("./middleware/redirectIfAuthenticated");
 
 app.use("/posts/store", storePost);
 
-app.get("/", homePageController);
-app.get("/posts/new", auth, createPostController);
-app.get("/posts/:id", getPostController);
-app.post("/posts/store", storePostController);
-app.get("/auth/register", redirectIfAuthenticated, createUserController);
-app.post("/users/register", redirectIfAuthenticated, storeUserController);
-app.get("/auth/login", redirectIfAuthenticated, loginController);
-app.post("/users/login", redirectIfAuthenticated, loginUserController);
-app.get("/auth/logout", logoutController);
+app.get("/", postsController.getAllPost);
+app.get("/posts/new", auth, postsController.newPost);
+app.post("/posts/store", postsController.createPost);
+app.get("/posts/:id", postsController.getPost);
+
+app.get("/auth/register", redirectIfAuthenticated, usersController.newUser);
+app.post(
+  "/users/register",
+  redirectIfAuthenticated,
+  usersController.createUser
+);
+app.get("/auth/login", redirectIfAuthenticated, sessionController.newLogin);
+app.post(
+  "/users/login",
+  redirectIfAuthenticated,
+  sessionController.createSession
+);
+app.get("/auth/logout", sessionController.destorySession);
 
 // app.get("/", async (req, res) => {
 //   const posts = await Post.find({});
